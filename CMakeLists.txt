@@ -31,6 +31,8 @@ endif()
 set(dcam_lib_dir ${dcam_api_linux_SOURCE_DIR}/api/runtime/${dcam_arch}/core)
 set(dcam_lib dcamapi)
 file(GLOB dcam_lib_path ${dcam_lib_dir}/lib${dcam_lib}.so*)
+cmake_path(GET dcam_lib_path FILENAME dcam_lib_filename)
+string(REGEX REPLACE "lib${dcam_lib}\\.so(\\.?[0-9]*)[\\.0-9]*" "lib${dcam_lib}.so\\1" dcam_lib_install ${dcam_lib_filename})
 file(GLOB_RECURSE src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${dcam_sdk_SOURCE_DIR}/dcamsdk4/inc)
@@ -46,10 +48,10 @@ pybind11_add_module(_PyDCAM MODULE ${src})
 target_link_libraries(
     _PyDCAM
     PRIVATE
-    ${dcam_lib}
+    ${dcam_lib_path}
 )
 
 set_target_properties(_PyDCAM PROPERTIES INSTALL_RPATH "$ORIGIN" INSTALL_RPATH_USE_LINK_PATH false BUILD_WITH_INSTALL_RPATH true)
 
 install(TARGETS _PyDCAM DESTINATION .)
-install(FILES ${dcam_lib_path} DESTINATION .)
+install(FILES ${dcam_lib_path} DESTINATION . RENAME ${dcam_lib_install})
