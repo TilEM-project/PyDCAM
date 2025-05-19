@@ -32,5 +32,19 @@ PYBIND11_MODULE(_PyDCAM, m) {
     .def("__enter__", [](const Camera &c){ return c; })
     .def("__exit__", &Camera::close);
 
+  py::class_<Frame>(m, "Frame", py::buffer_protocol())
+    .def_property_readonly("width", &Frame::get_width)
+    .def_property_readonly("height", &Frame::get_height)
+    .def_buffer([](Frame &f) -> py::buffer_info {
+      return py::buffer_info(
+        f.get_data(),
+        1,
+        py::format_descriptor<uint8_t>::format(),
+        2,
+        {f.get_height(), f.get_width()},
+        {f.get_width(), 1}
+      );
+    });
+
   py::register_local_exception<DCAMException>(m, "DCAMException");
 }

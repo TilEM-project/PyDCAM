@@ -4,10 +4,32 @@
 #include "exceptions.hpp"
 #include "dcamapi4.h"
 #include "dcamprop.h"
+#include <memory>
+#include <cstdint>
 
 #define STR_LEN 256
 
 #define THROW_IF_ERROR(func) { DCAMERR error; if(failed(error = func)) throw DCAMException(error); }
+
+class Frame {
+public:
+  Frame(DCAMBUF_FRAME frame, std::shared_ptr<uint8_t[]> buf) {
+    this->frame = frame;
+    this->buf = buf;
+  };
+  int get_width(void) {
+    return this->frame.width;
+  };
+  int get_height(void) {
+    return this->frame.height;
+  };
+  uint8_t* get_data(void) {
+    return this->buf.get();
+  };
+private:
+  DCAMBUF_FRAME frame;
+  std::shared_ptr<uint8_t[]> buf;
+};
 
 class Camera {
 public:
@@ -18,7 +40,7 @@ public:
   void start(void) {
     THROW_IF_ERROR(dcamcap_start(this->hdcam, DCAMCAP_START_SEQUENCE))
   };
-  void capture(void);
+  Frame capture(void);
   std::string get_model(void) {
     return this->get_string(DCAM_IDSTR_MODEL);
   };

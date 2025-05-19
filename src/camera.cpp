@@ -37,7 +37,7 @@ Camera::Camera(HDCAM hdcam, int32 buf_size) {
   THROW_IF_ERROR(dcambuf_alloc(this->hdcam, buf_size))
 }
 
-void Camera::capture(void) {
+Frame Camera::capture(void) {
   THROW_IF_ERROR(dcamcap_firetrigger( hdcam ))
 
   DCAMWAIT_START wait_frame;
@@ -47,11 +47,24 @@ void Camera::capture(void) {
 	wait_frame.timeout = 1000;
   THROW_IF_ERROR(dcamwait_start(this->wait_handle, &wait_frame))
 
+  std::shared_ptr<uint8_t[]> buf(
+    new uint8_t[this->get_width() * this->get_height()],
+    std::default_delete<uint8_t[]>()
+  );
+
   DCAMBUF_FRAME	frame_buf;
 	memset(&frame_buf, 0, sizeof(frame_buf));
 	frame_buf.size = sizeof(frame_buf);
+  frame_buf.buf = buf.get();
+  frame_buf.rowbytes = this->get_width();
+  frame_buf.width = this->get_width();
+  frame_buf.height = this->get_height();
+  frame_buf.left = 0;
+  frame_buf.top = 0;
+  frame_buf.type = DCAM_PIXELTYPE_NONE;
 	frame_buf.iFrame = -1;
   THROW_IF_ERROR(dcambuf_copyframe(this->hdcam, &frame_buf))
+  return Frame(frame_buf, buf);
 }
 
 std::string Camera::get_string(int32 param_id) {
