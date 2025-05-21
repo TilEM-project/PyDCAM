@@ -210,6 +210,11 @@ public:
     THROW_IF_ERROR(dcamprop_setgetvalue(this->hdcam, prop_id, &cvalue))
     return (DCAMPROPMODEVALUE) cvalue;
   }
+  DCAMIDPROP get_next_id(DCAMIDPROP prop_id, DCAMPROPOPTION options = DCAMPROP_OPTION_SUPPORT) {
+    int32 cvalue = (int32) prop_id;
+    THROW_IF_ERROR(dcamprop_getnextid(this->hdcam, &cvalue, options))
+    return (DCAMIDPROP) cvalue;
+  }
 private:
   HDCAM hdcam;
   HDCAMWAIT wait_handle;

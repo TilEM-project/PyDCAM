@@ -50,7 +50,8 @@ PYBIND11_MODULE(_PyDCAM, m) {
     }, py::arg("param_id"))
     .def("set_value", py::overload_cast<DCAMIDPROP, double>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
     .def("set_value", py::overload_cast<DCAMIDPROP, int32>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
-    .def("set_value", py::overload_cast<DCAMIDPROP, DCAMPROPMODEVALUE>(&Camera::set_value), py::arg("param_id"), py::arg("value"));
+    .def("set_value", py::overload_cast<DCAMIDPROP, DCAMPROPMODEVALUE>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
+    .def("get_next_id", &Camera::get_next_id, py::arg("prop_id"), py::arg("options") = DCAMPROP_OPTION_SUPPORT);
     // .def("__enter__", [](Camera &c){ return c; })
     // .def("__exit__", [](
     //   Camera &c,
