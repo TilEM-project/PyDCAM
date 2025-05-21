@@ -36,7 +36,6 @@ string(REGEX REPLACE "lib${dcam_lib}\\.so(\\.?[0-9]*)[\\.0-9]*" "lib${dcam_lib}.
 file(GLOB_RECURSE src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${dcam_sdk_SOURCE_DIR}/dcamsdk4/inc)
-link_directories(${dcam_lib_dir})
 
 find_package(pybind11 CONFIG)
 if(NOT pybind11_FOUND)
