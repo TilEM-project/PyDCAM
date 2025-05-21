@@ -215,6 +215,16 @@ public:
     THROW_IF_ERROR(dcamprop_getnextid(this->hdcam, &cvalue, options))
     return (DCAMIDPROP) cvalue;
   }
+  DCAM_PIXELTYPE get_pixel_type(void) {
+    double value;
+    THROW_IF_ERROR(dcamprop_getvalue(this->hdcam, DCAM_IDPROP_IMAGE_PIXELTYPE, &value))
+    return (DCAM_PIXELTYPE) value;
+  }
+  DCAM_PIXELTYPE set_pixel_type(DCAM_PIXELTYPE type) {
+    double value = (double) type;
+    THROW_IF_ERROR(dcamprop_setgetvalue(this->hdcam, DCAM_IDPROP_IMAGE_PIXELTYPE, &value))
+    return (DCAM_PIXELTYPE) value;
+  }
 private:
   HDCAM hdcam;
   HDCAMWAIT wait_handle;
@@ -241,6 +251,7 @@ inline float get_pixel_size(DCAM_PIXELTYPE type) {
   switch (type) {
     case DCAM_PIXELTYPE_MONO8: return 1;
     case DCAM_PIXELTYPE_MONO12: case DCAM_PIXELTYPE_MONO12P: return 1.5;
+    case DCAM_PIXELTYPE_MONO16: return 2;
     case DCAM_PIXELTYPE_BGR24: case DCAM_PIXELTYPE_RGB24: return 3;
     case DCAM_PIXELTYPE_BGR48: case DCAM_PIXELTYPE_RGB48: return 6;
     default: throw DCAMException("Pixel type of unknown size!");

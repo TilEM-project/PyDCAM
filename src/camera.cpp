@@ -39,7 +39,7 @@ Frame Camera::copyframe(
   if (width == 0) width = this->get_value_long(DCAM_IDPROP_IMAGE_WIDTH);
   if (height == 0) height = this->get_value_long(DCAM_IDPROP_IMAGE_HEIGHT);
 
-  int row_size = std::ceil(get_pixel_size(this->get_value_long(DCAM_IDPROP_IMAGE_PIXELTYPE)) * width);
+  int row_size = std::ceil(get_pixel_size(this->get_pixel_type()) * width);
   int buf_size = row_size * height;
   std::shared_ptr<uint8_t[]> buf(
     new uint8_t[buf_size],

@@ -1,3 +1,3 @@
-from ._PyDCAM import DCAM, Camera, DCAMException
+from ._PyDCAM import DCAM, Camera, DCAMException, START, PIXELTYPE, IDSTR, STATUS, EVENT, ATTRIBUTE, ATTRIBUTE2, UNIT, MODEVALUE, IDPROP, PROP_OPTION
 
-__all__ = ("DCAM",)
+__all__ = ("DCAM", "Camera", "DCAMException", "START", "PIXELTYPE", "IDSTR", "STATUS", "EVENT", "ATTRIBUTE", "ATTRIBUTE2", "UNIT", "MODEVALUE", "IDPROP", "PROP_OPTION")

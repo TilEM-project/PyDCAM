@@ -1,3 +1,5 @@
+#define PYBIND11_DETAILED_ERROR_MESSAGES
+
 #include <pybind11/pybind11.h>
 #include "camera.hpp"
 #include "exceptions.hpp"
@@ -7,6 +9,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(_PyDCAM, m) {
   m.doc() = "Python bindings for the Hamamatsu DCAM API.";
+
+  wrap_enums(m);
 
   py::class_<DCAM>(m, "DCAM")
     .def(py::init())
@@ -49,9 +53,10 @@ PYBIND11_MODULE(_PyDCAM, m) {
       }
     }, py::arg("param_id"))
     .def("set_value", py::overload_cast<DCAMIDPROP, double>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
-    .def("set_value", py::overload_cast<DCAMIDPROP, int32>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
     .def("set_value", py::overload_cast<DCAMIDPROP, DCAMPROPMODEVALUE>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
-    .def("get_next_id", &Camera::get_next_id, py::arg("prop_id"), py::arg("options") = DCAMPROP_OPTION_SUPPORT);
+    .def("set_value", py::overload_cast<DCAMIDPROP, int32>(&Camera::set_value), py::arg("param_id"), py::arg("value"))
+    .def("get_next_id", &Camera::get_next_id, py::arg("prop_id"), py::arg("options") = DCAMPROP_OPTION_SUPPORT)
+    .def_property("pixel_type", &Camera::get_pixel_type, &Camera::set_pixel_type);
     // .def("__enter__", [](Camera &c){ return c; })
     // .def("__exit__", [](
     //   Camera &c,
@@ -138,6 +143,4 @@ PYBIND11_MODULE(_PyDCAM, m) {
     .def_property_readonly("type", &Attrs::get_type);
 
   py::register_local_exception<DCAMException>(m, "DCAMException");
-
-  wrap_enums(m);
 }
